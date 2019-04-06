@@ -24,9 +24,9 @@ apCross(checkDiff+1) = [];
 
 
 steps = zeros(1,length(apCross));
-for ii = 1:length(apCross)
-    [~ , loc] = findpeaks(ap(1:apCross(ii)));
-    if ~isempty(loc), steps(ii) = loc(end); end         
+for jj = 1:length(apCross)
+    [~ , loc] = findpeaks(ap(1:apCross(jj)));
+    if ~isempty(loc), steps(jj) = loc(end); end         
 end
 steps(steps==0) = [];
 
@@ -71,7 +71,7 @@ for ii = 1:nTurns+1
         int = round(diff(turns(ii-1,:))/4);
         startInt = turns(ii-1,2)-int:turns(ii-1,2);
         startStep = intersect(steps, startInt );
-        if ~isempty(startStep)
+        if ~isempty(startStep) && ~isempty(walk{ii})
             temp = walk{ii}(1) - startStep(end);
             if temp < m+sd && temp > m-sd
                 walk{ii} = [startStep(end), walk{ii}];
@@ -89,11 +89,13 @@ for ii = 1:nTurns+1
     end
 end
 
+walk(cellfun(@isempty, walk)) = [];
 walkSeg = zeros(length(walk),2);
-for ii = 1:length(walk)
-    walkSeg(ii,1) = min(walk{ii});
-    walkSeg(ii,2) = max(walk{ii});
+for III = 1:length(walk)
+    walkSeg(III,1) = min(walk{III});
+    walkSeg(III,2) = max(walk{III});
 end
+
 
 end
 

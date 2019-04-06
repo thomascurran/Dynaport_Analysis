@@ -541,7 +541,7 @@ walkLN = 8*length(walkSeg);
 
 %Check turn segments are acceptable
 rem2 = [];
-nTruns = size(turns,1);
+nTurns = size(turns,1);
 for count2 = 1:nTurns
     if turns(count2,1)==turns(count2,2) || turns(count2,1) > turns(count2,2)
         rem2 = [rem2;count2];
