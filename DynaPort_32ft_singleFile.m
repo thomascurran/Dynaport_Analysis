@@ -3,7 +3,7 @@
 useQC = 0;
 
 p = 'C:\Users\Thomas\Documents\Dynaport_Errors\';
-fileTxt = '0000-19796-50019-1539691955.156372-1539692475.885483_32FT.txt';
+fileTxt = '0000-19796-50019-1533810181.155701-1533810913.836197_32FT.txt';
 filename = [p fileTxt];
 
 if useQC

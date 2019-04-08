@@ -48,7 +48,7 @@ for ii = 1:nTurns+1
        int = round(diff(turns(ii,:))/4);
        endInt = turns(ii,1):turns(ii,1)+int;
        endStep = intersect(steps, endInt);
-       if ~isempty(endStep)
+       if ~isempty(endStep) && ~isempty(walk{ii})
            temp = endStep(1) - walk{ii}(end);
            if  temp < m+sd && temp > m-sd
                walk{ii} = [walk{ii}, endStep(1)];
@@ -80,7 +80,7 @@ for ii = 1:nTurns+1
         int = round(diff(turns(ii,:))/4);
         endInt = turns(ii,1):turns(ii,1)+int;
         endStep = intersect(steps, endInt);
-        if ~isempty(endStep)
+        if ~isempty(endStep) && ~isempty(walk{ii})
            temp = endStep(1) - walk{ii}(end);
            if temp < m+sd && temp > m-sd
                walk{ii} = [walk{ii}, endStep(1)];
