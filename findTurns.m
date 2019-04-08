@@ -81,13 +81,28 @@ short = find(short);
 turns(short,:) = [];
 peaks(short) = [];
 
-%Remove repeated turns
+%Remove repeated and overlapping turns
 rem = [];
 for jjj = 2:size(turns,1)
-    if turns(jjj,:) == turns(jjj-1,:)
-        rem = [rem;jjj];
+    if turns(jjj,1) <= turns(jjj-1,2)
+        turns(jjj,1) = turns(jjj-1,1);
+        rem = [rem;jjj-1];
+        if abs(yaw(peaks(jjj-1))) > abs(yaw(peaks(jjj)))
+            peaks(jjj) = peaks(jjj-1);
+        end
     end
 end
 turns(rem,:) = [];
+peaks(rem) = [];
+
+
+%Remove repeated turns
+% rem = [];
+% for jjj = 2:size(turns,1)
+%     if turns(jjj,:) == turns(jjj-1,:)
+%         rem = [rem;jjj];
+%     end
+% end
+% turns(rem,:) = [];
 
 end

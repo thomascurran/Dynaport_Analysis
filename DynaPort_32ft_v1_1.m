@@ -541,7 +541,7 @@ walkLN = 8*length(walkSeg);
 
 %Check turn segments are acceptable
 rem2 = [];
-nTruns = size(turns,1);
+nTurns = size(turns,1);
 for count2 = 1:nTurns
     if turns(count2,1)==turns(count2,2) || turns(count2,1) > turns(count2,2)
         rem2 = [rem2;count2];
@@ -830,7 +830,7 @@ for ii = 1:nTurns+1
        int = round(diff(turns(ii,:))/4);
        endInt = turns(ii,1):turns(ii,1)+int;
        endStep = intersect(steps, endInt);
-       if ~isempty(endStep)
+       if ~isempty(endStep) && ~isempty(walk{ii})
            temp = endStep(1) - walk{ii}(end);
            if  temp < m+sd && temp > m-sd
                walk{ii} = [walk{ii}, endStep(1)];
@@ -841,7 +841,7 @@ for ii = 1:nTurns+1
         int = round(diff(turns(ii-1,:))/4);
         startInt = turns(ii-1,2)-int:turns(ii-1,2);
         startStep = intersect(steps, startInt );
-        if ~isempty(startStep)
+        if ~isempty(startStep) && ~isempty(walk{ii})
             temp = walk{ii}(1) - startStep(end);
             if temp < m+sd && temp > m-sd
                 walk{ii} = [startStep(end), walk{ii}];
@@ -853,7 +853,7 @@ for ii = 1:nTurns+1
         int = round(diff(turns(ii-1,:))/4);
         startInt = turns(ii-1,2)-int:turns(ii-1,2);
         startStep = intersect(steps, startInt );
-        if ~isempty(startStep)
+        if ~isempty(startStep) && ~isempty(walk{ii})
             temp = walk{ii}(1) - startStep(end);
             if temp < m+sd && temp > m-sd
                 walk{ii} = [startStep(end), walk{ii}];
@@ -862,7 +862,7 @@ for ii = 1:nTurns+1
         int = round(diff(turns(ii,:))/4);
         endInt = turns(ii,1):turns(ii,1)+int;
         endStep = intersect(steps, endInt);
-        if ~isempty(endStep)
+        if ~isempty(endStep) && ~isempty(walk{ii})
            temp = endStep(1) - walk{ii}(end);
            if temp < m+sd && temp > m-sd
                walk{ii} = [walk{ii}, endStep(1)];
@@ -871,6 +871,7 @@ for ii = 1:nTurns+1
     end
 end
 
+walk(cellfun(@isempty, walk)) = [];
 walkSeg = zeros(length(walk),2);
 for ii = 1:length(walk)
     walkSeg(ii,1) = min(walk{ii});
