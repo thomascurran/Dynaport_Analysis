@@ -2,8 +2,11 @@
 %useQC = 0 to not include the QC files
 useQC = 0;
 
-p = 'C:\Users\Thomas\Documents\Dynaport_Errors\';
-fileTxt = '0000-19796-50019-1533810181.155701-1533810913.836197_32FT.txt';
+%set to 1 to immitate the AP Peaks button in GUI
+altStepFind = 0;
+
+p = 'C:\Users\Thomas\Documents\Dynaport_Errors\32Ft\';
+fileTxt = '0000-19796-50154-1524651279.13327-1524653118.913147_32FT.txt';
 filename = [p fileTxt];
 
 if useQC
@@ -50,6 +53,10 @@ turnMin = min(t360);
 
 [ walkSeg, walk, steps ] = findSteps( ap, turns );
 
+if altStepFind == 1
+    [ steps, walk, walkSeg ] = stepsNoZeroCross( ap, turns );
+end
+
 rem = [];
 nSeg = size(walkSeg,1);
 for count = 1:nSeg
@@ -84,8 +91,6 @@ tSteps = (steps - 1) ./ 100;
 tPeaks = (peaks - 1) ./ 100;
 tTurns = (turns - 1) ./ 100;
 
-
-
 %AP Acc Plot
 apLim = [min(ap) , max(ap)];
 figure, hold on
@@ -97,10 +102,9 @@ for ii = 1:size(tTurns,1)
     removeAP(ii) = rectangle('Position' , [tTurns(ii,1), apLim(1), diff(tTurns(ii,:)), diff(apLim)], 'FaceColor', [1 .72 .72], 'EdgeColor', [0 0 0], 'LineStyle', 'none');
     uistack(removeAP(ii), 'bottom');
 end
-
-for ii = 1:length(walk)
-    walkLim = [walk{ii}(1), walk{ii}(end)]/100;
-    walkSeg(ii) = rectangle('Position' , [walkLim(1), apLim(1), diff(walkLim), diff(apLim)], 'EdgeColor', 'b');
+for jj = 1:size(walkSeg,1)
+    walkLim = [walkSeg(jj,1), walkSeg(jj,2)]/100;
+    walkBox(jj) = rectangle('Position' , [walkLim(1), apLim(1), diff(walkLim), diff(apLim)], 'EdgeColor', 'b');
 end
 title('AP Acc');
 
@@ -108,8 +112,8 @@ yawLim = [min(yaw) , max(yaw)];
 figure, hold on
 line(timevec, yaw, 'Color', 'k');
 line(tPeaks, yaw(peaks), 'Marker', '*', 'Color' , 'r', 'LineStyle' , 'none');
-for ii = 1:size(tTurns,1)
-    removeYaw(ii) = rectangle('Position' , [tTurns(ii,1), yawLim(1), diff(tTurns(ii,:)), diff(yawLim)], 'FaceColor', [1 .72 .72], 'EdgeColor', [0 0 0], 'LineStyle', 'none');
-    uistack(removeYaw(ii), 'bottom');
+for II = 1:size(tTurns,1)
+    removeYaw(II) = rectangle('Position' , [tTurns(II,1), yawLim(1), diff(tTurns(II,:)), diff(yawLim)], 'FaceColor', [1 .72 .72], 'EdgeColor', [0 0 0], 'LineStyle', 'none');
+    uistack(removeYaw(II), 'bottom');
 end
 title('Yaw');
