@@ -291,6 +291,10 @@ editFlag(4) = 1;
 
 
 [x, ~] = getpts;
+
+if length(x) > 1
+    errordlg('Please select only one point');
+else
 %Convert x from time to index
 x = round(x .*100 +1);
 tol = 15;
@@ -334,6 +338,7 @@ else
     ap(newEnd:end, :) = [];
     [ walkSeg, walk, steps ] = findSteps( ap, turns );
     calcVars;
+end
 end
 
 
@@ -577,7 +582,7 @@ if realdataflag             %for the case that there's a valid current file
     global turns;
     global peaks;
     global steps;
-    global walk;
+    global walkSeg;
     global endTurn;
     
     timevec = linspace(0.0, (length(acc) -1 )/100, length(acc));
@@ -604,12 +609,9 @@ if realdataflag             %for the case that there's a valid current file
         removeAP(ii) = rectangle('Position' , [tTurns(ii,1), apLim(1), diff(tTurns(ii,:)), diff(apLim)], 'FaceColor', [1 .72 .72], 'EdgeColor', [0 0 0], 'LineStyle', 'none');
         uistack(removeAP(ii), 'bottom');
     end
-    for ii = 1:length(walk)
-        walkLim = [walk{ii}(1), walk{ii}(end)]/100;
-        walkSeg(ii) = rectangle('Position' , [walkLim(1), apLim(1), diff(walkLim), diff(apLim)], 'EdgeColor', 'b');
-        %uistack(walkSeg(ii), 'bottom');
-        %walkSeg = [walk{ii}(1), walk{ii}(end)];
-        %line(walkSeg/100, ap(walkSeg), 'Color', 'b')
+    for jj = 1:size(walkSeg,1)
+        walkLim = [walkSeg(jj,1), walkSeg(jj,2)]/100;
+        walkBox(jj) = rectangle('Position' , [walkLim(1), apLim(1), diff(walkLim), diff(apLim)], 'EdgeColor', 'b');
     end
     
     %Yaw Plot
@@ -620,9 +622,9 @@ if realdataflag             %for the case that there's a valid current file
     line(timevec, yaw, 'Color', 'k');
     line(tPeaks, yaw(peaks), 'Marker', '*', 'Color' , 'r', 'LineStyle' , 'none');
     set(hYaw, 'XLim', [0 timevec(end)]);
-    for ii = 1:size(tTurns,1)
-        removeYaw(ii) = rectangle('Position' , [tTurns(ii,1), yawLim(1), diff(tTurns(ii,:)), diff(yawLim)], 'FaceColor', [1 .72 .72], 'EdgeColor', [0 0 0], 'LineStyle', 'none');
-        uistack(removeYaw(ii), 'bottom');
+    for II = 1:size(tTurns,1)
+        removeYaw(II) = rectangle('Position' , [tTurns(II,1), yawLim(1), diff(tTurns(II,:)), diff(yawLim)], 'FaceColor', [1 .72 .72], 'EdgeColor', [0 0 0], 'LineStyle', 'none');
+        uistack(removeYaw(II), 'bottom');
     end
 
     
@@ -872,11 +874,17 @@ for ii = 1:nTurns+1
 end
 
 walk(cellfun(@isempty, walk)) = [];
+remWalk = [];
 walkSeg = zeros(length(walk),2);
-for ii = 1:length(walk)
-    walkSeg(ii,1) = min(walk{ii});
-    walkSeg(ii,2) = max(walk{ii});
+for III = 1:length(walk)
+    if length(walk{III}) <= 2
+        remWalk = [remWalk; III];
+    else
+        walkSeg(III,1) = min(walk{III});
+        walkSeg(III,2) = max(walk{III});
+    end
 end
+walkSeg(remWalk,:) = [];
 
 calcVars;
 

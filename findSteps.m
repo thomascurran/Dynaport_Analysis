@@ -21,12 +21,12 @@ minDist = 40;
 checkDiff = find(checkDiff < minDist);
 checkDiff(ismember(checkDiff,turnInt)) = [];
 apCross(checkDiff+1) = [];
-
+if apCross(1) > 10, apCross = [1;apCross]; end
 
 steps = zeros(1,length(apCross));
-for jj = 1:length(apCross)
-    [~ , loc] = findpeaks(ap(1:apCross(jj)));
-    if ~isempty(loc), steps(jj) = loc(end); end         
+for jj = 2:length(apCross)
+    [~ , loc] = findpeaks(ap(apCross(jj-1):apCross(jj)));
+    if ~isempty(loc), steps(jj) = loc(end)+apCross(jj-1)-1; end         
 end
 steps(steps==0) = [];
 
@@ -90,12 +90,18 @@ for ii = 1:nTurns+1
 end
 
 walk(cellfun(@isempty, walk)) = [];
+remWalk = [];
 walkSeg = zeros(length(walk),2);
 for III = 1:length(walk)
-    walkSeg(III,1) = min(walk{III});
-    walkSeg(III,2) = max(walk{III});
+    if length(walk{III}) <= 2
+        remWalk = [remWalk; III];
+    else
+        walkSeg(III,1) = min(walk{III});
+        walkSeg(III,2) = max(walk{III});
+    end
 end
 
+walkSeg(remWalk,:) = [];
 
 end
 
