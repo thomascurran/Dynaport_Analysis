@@ -9,6 +9,12 @@ end
 %Steps are counted as the peak that preceeds the change in sign of the AP acceleration
 apCross = find(diff(sign(ap))<0);
 
+%Edited on 01/05/2019
+if length(apCross) < 5
+    apTemp = ap - mean(ap);
+    apCross = find(diff(sign(apTemp))<0);
+end
+
 % %Some Samples show a second peak in the AP acceleration, if this happens,
 % %choose the first peak
 % [~,vly] = findpeaks(-ap, 'MinPeakProminence', 1);

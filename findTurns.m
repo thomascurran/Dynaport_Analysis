@@ -32,6 +32,11 @@ peaks = sort(peaks);
 %Turn period is defined as when the yaw signal crosses threshold on either side of a peak/valley
 %Threshold for turns is considered the max absolute value of yaw in the first 1.5 seconds 
 lim = max(abs(yaw(1:150)));
+%If lim is within 75% of the maximum of the yaw, use a different threshold, which is 0.15*max(abs(yaw))
+%These numbers are arbitrary as of 01/05/2019
+limMax = max(abs(yaw));
+if lim > limMax*0.75, lim = 0.15*limMax; end
+
 ind = find(abs(yaw) < lim);
 turns = zeros(length(peaks), 2);
 
