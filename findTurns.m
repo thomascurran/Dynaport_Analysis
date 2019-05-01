@@ -5,6 +5,8 @@ function [peaks, turns] = findTurns(yaw, turnMin)
 %and after the peaks of the yaw signal
 %MinCycle is in terms of data samples, not time
 
+%Last Edit on 01/05/2019
+
 %Find Turns
 
 ln = length(yaw);
@@ -100,6 +102,12 @@ end
 turns(rem,:) = [];
 peaks(rem) = [];
 
+%If there are more than 4 turns, only keep the 4 biggest peaks
+while length(peaks) > 4
+    [~,rem2] = min(abs(yaw(peaks)));
+    turns(rem2,:) = [];
+    peaks(rem2) = [];
+end
 
 %Remove repeated turns
 % rem = [];
