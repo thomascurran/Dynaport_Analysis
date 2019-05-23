@@ -22,6 +22,10 @@ fs = 100;
 %Separate windows b/c more time added prior to start than after end
 win1 = floor(ln/3); %win2 = floor(ln/4);
 
+%Check to see if ap changes sign multiple times
+tempAlign = length(find(diff(sign(ap))));
+if tempAlign < 10, ap = ap-mean(ap); end;
+
 %Find Start Location
 [pkS2, locS2]=findpeaks(-ap(1:win1));
 [~, indS2] = max(pkS2);
@@ -136,7 +140,10 @@ yawIX = [tst1, tet1, tst2, tet2, yix1, yix2];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Find End Index
-[pkE1, locE1]=findpeaks(-ap(tst2:ln));
+
+%Added buffer so Eix1 is not at end of test
+eixWin = ln-50;
+[pkE1, locE1]=findpeaks(-ap(tst2:eixWin));
 [~, indE1] = max(pkE1);
 eix1 = locE1(indE1) + tst2 - 1;
 aX = find(diff(sign(ap(eix1:ln))));

@@ -167,69 +167,78 @@ editFlag(5) = 1;
 %Convert x from time to index
 x = round(x .*100 +1);
 
-if any(abs(yaw(x)) < std(yaw))
-    errordlg('Point selected is less than a standard deviation from 0');
+lim = max(abs(yaw(1:150)));
+if lim*3 > max(abs(yaw))
+    ind = find(diff(sign(yaw)));
 else
-    lim = max(abs(yaw(1:150)));
-    if lim*3 > max(abs(yaw))
-        ind = find(diff(sign(yaw)));
-    else
-        ind = find(abs(yaw) < lim);
-    end
-
-    [~, pks] = findpeaks(yaw);
-    [~, vly] = findpeaks(-yaw);
-    tAdd = zeros(length(x), 2);
-
-    for ii = 1:length(x)
-        limCross = ind - x(ii);
-        if yaw(x(ii)) > 0
-            loc = vly;
-        else
-            loc = pks;
-        end
-        
-        l = limCross(limCross<0);
-        l = l(end) + x(ii);
-        lLim = loc - l;
-        lLim = lLim(lLim<0);
-        tAdd(ii,1) = lLim(end) + l;
-        
-        r = limCross(limCross>0);
-        if isempty(r)
-            rLim = length(yaw);
-        else
-            r = r(1) + x(ii);
-            rPeak = loc - r;
-            rPeak = rPeak(rPeak>0);
-            rLim = rPeak(1) + r;
-        end
-        tAdd(ii,2) = rLim;
-        [~, xPeak] = max(abs(yaw(tAdd(ii,1):tAdd(ii,2))));
-        x(ii) = xPeak + tAdd(ii,1);
-    end
-    
-    dupl = 0;
-    for jj = 1:size(turns,1)
-        tol = 50;
-        check = turns(jj,1)-tol:turns(jj,2)+tol;
-        if ~isempty(intersect(tAdd, check))
-            turns(jj,:) = [min(tAdd(1), turns(jj,1)) , max(tAdd(2) , turns(jj,2))];
-            dupl = 1;
-        end
-    end
-        
-    if ~dupl
-        turns = [turns; tAdd];
-        turns = sort(turns);
-        peaks = [peaks x'];
-        peaks = sort(peaks);
-    end
-    
-    [ walkSeg, walk, steps ] = findSteps( ap, turns );
-    calcVars;
-    
+    ind = find(abs(yaw) < lim);
 end
+
+[~, pks] = findpeaks(yaw);
+[~, vly] = findpeaks(-yaw);
+tAdd = zeros(length(x), 2);
+
+for ii = 1:length(x)
+    limCross = ind - x(ii);
+    if yaw(x(ii)) > 0
+        loc = vly;
+    else
+        loc = pks;
+    end
+
+    l = limCross(limCross<0);
+    l = l(end) + x(ii);
+    lLim = loc - l;
+    lLim = lLim(lLim<0);
+    tAdd(ii,1) = lLim(end) + l;
+
+    r = limCross(limCross>0);
+    if isempty(r)
+        rLim = length(yaw);
+    else
+        r = r(1) + x(ii);
+        rPeak = loc - r;
+        rPeak = rPeak(rPeak>0);
+        rLim = rPeak(1) + r;
+    end
+    tAdd(ii,2) = rLim;
+    [~, xPeak] = max(abs(yaw(tAdd(ii,1):tAdd(ii,2))));
+    x(ii) = xPeak + tAdd(ii,1);
+end
+
+dupl = 0;
+for jj = 1:size(turns,1)
+    tol = 50;
+    check = turns(jj,1)-tol:turns(jj,2)+tol;
+    if ~isempty(intersect(tAdd, check))
+        turns(jj,:) = [min(tAdd(1), turns(jj,1)) , max(tAdd(2) , turns(jj,2))];
+        dupl = 1;
+    end
+end
+
+if ~dupl
+    turns = [turns; tAdd];
+    turns = sort(turns);
+    peaks = [peaks x'];
+    peaks = sort(peaks);
+end
+
+%Remove repeated and overlapping turns
+rem = [];
+for jjj = 2:size(turns,1)
+    if turns(jjj,1) <= turns(jjj-1,2)
+        turns(jjj,1) = turns(jjj-1,1);
+        rem = [rem;jjj-1];
+        if abs(yaw(peaks(jjj-1))) > abs(yaw(peaks(jjj)))
+            peaks(jjj) = peaks(jjj-1);
+        end
+    end
+end
+turns(rem,:) = [];
+peaks(rem) = [];
+
+[ walkSeg, walk, steps ] = findSteps( ap, turns );
+calcVars;
     
     
 

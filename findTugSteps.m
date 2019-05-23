@@ -6,10 +6,15 @@ nTurns = 2;
 turnInt = [yawIX(1):yawIX(2), yawIX(3):yawIX(4)];
 
 
-
+ln = length(ap);
 minStep = 30;
 steps = [];
-for ii=apIX(2):apIX(3)
+
+winSteps = apIX(2):apIX(3);
+winSteps(winSteps<minStep+1)=[];
+winSteps(winSteps>ln-minStep-1)=[];
+
+for ii=winSteps
     a=ap(ii-minStep:ii+minStep);
     if ap(ii) == max(a)
         steps = [steps ii];
