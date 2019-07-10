@@ -2,8 +2,8 @@ close all;
 clear all;
 
 
-p = 'C:\Users\Thomas\Documents\Dynaport_Errors\TUG\';
-fileTxt = '0000-19796-50019-1541414036.160614-1541414718.870148_TUG_1.txt';
+p = 'C:\Users\Thomas\Documents\DynaPort_Data\dynaport_batch_178\segmented\';
+fileTxt = '0000-19796-50004-1534505536.147308-1534506003.951904_TUG_1.txt';
 filename = [p fileTxt];
 
 signal = textread(filename);

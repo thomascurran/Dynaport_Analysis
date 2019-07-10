@@ -28,8 +28,12 @@ if tempAlign < 10, ap = ap-mean(ap); end;
 
 %Find Start Location
 [pkS2, locS2]=findpeaks(-ap(1:win1));
-[~, indS2] = max(pkS2);
-six2 = locS2(indS2);
+if ~isempty (pkS2)
+    [~, indS2] = max(pkS2);
+    six2 = locS2(indS2);
+else
+    [~,six2] = min(ap(1:win1));
+end
 
 aX = find(diff(sign(ap(1:six2))));
 if isempty(aX)
@@ -144,8 +148,13 @@ yawIX = [tst1, tet1, tst2, tet2, yix1, yix2];
 %Added buffer so Eix1 is not at end of test
 eixWin = ln-50;
 [pkE1, locE1]=findpeaks(-ap(tst2:eixWin));
-[~, indE1] = max(pkE1);
-eix1 = locE1(indE1) + tst2 - 1;
+if ~isempty(pkE1)
+    [~, indE1] = max(pkE1);
+    eix1 = locE1(indE1) + tst2 - 1;
+else
+    [~, indE1] = min(ap(tst2:eixWin));
+    eix1 = indE1 + tst2 - 1;
+end
 aX = find(diff(sign(ap(eix1:ln))));
 if isempty(aX)
     tol = 0.25;
@@ -181,10 +190,15 @@ apRng = max(ap(mdpt-fs:mdpt+fs)) - min(ap(mdpt-fs:mdpt+fs));
 apCheck = (ap(eix2) - ap(eix1));
 if  apCheck < apRng*tol
     [pkE2, locE2]=findpeaks(ap(tst2:ln));
-    [~, indE2] = max(pkE2);
-    eix2 = locE2(indE2) + tst2 - 1;
+    if ~isempty(pkE2)
+        [~, indE2] = max(pkE2);
+        eix2 = locE2(indE2) + tst2 - 1;
+    else
+        [~,indE2] = max(ap(tst2:ln));
+        eix2 = indE2 + tst2 - 1;
+    end
     [~, locE1]=findpeaks(-ap(tst2:eix2));
-    eix1 = locE1(end) + tst2 - 1;
+    if ~isempty(locE1), eix1 = locE1(end) + tst2 - 1; end
 
 end
     

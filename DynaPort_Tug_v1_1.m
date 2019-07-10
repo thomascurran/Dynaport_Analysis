@@ -22,7 +22,7 @@ function varargout = DynaPort_Tug_v1_1(varargin)
 
 % Edit the above text to modify the response to help DynaPort_Tug_v1_1
 
-% Last Modified by GUIDE v2.5 22-Jan-2019 13:16:04
+% Last Modified by GUIDE v2.5 08-Jul-2019 12:14:52
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -1389,3 +1389,126 @@ else
     [ walkSeg, walk, steps ] = findTugSteps( acc2(:,3), apIX, yawIX );
     calcVars;
 end
+
+
+
+
+% --- Executes on button press in replaceTurn1.
+function replaceTurn1_Callback(hObject, eventdata, handles)
+% hObject    handle to replaceTurn1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of replaceTurn1
+
+global apIX;
+global yawIX;
+global acc2;
+global walkSeg;
+global walk;
+global steps;
+global editFlag;
+
+%editFlag = [editSTS1 firstStep missWalk editEIX addTurn multAttempt]
+editFlag(5) = 1;
+
+ap2 = acc2(:,3);
+yaw = acc2(:,4);
+
+
+[x, ~] = getpts;
+x = round(x(1) .*100 +1);
+
+yawWin = x-10:x+10;
+[~,temp] = max(abs(yaw(yawWin)));
+pk = temp + yawWin(1)-1;
+
+
+lim = max(abs(yaw(apIX(1):apIX(1)+150)));
+ind = find(abs(yaw) < lim);
+
+limCross = ind - pk;
+l = limCross(limCross<0);
+tStart = l(end) + pk;
+r = limCross(limCross>0);
+if isempty(r)
+    r = length(yaw);
+else
+    r = r(1) + pk;
+end
+tEnd = r;
+
+yawIX(1) = tStart;
+yawIX(2) = tEnd;
+yawIX(5) = pk;
+
+[ walkSeg, walk, steps ] = findTugSteps( ap2, apIX, yawIX );
+
+calcVars;
+
+
+
+
+% --- Executes on button press in replaceTurn2.
+function replaceTurn2_Callback(hObject, eventdata, handles)
+% hObject    handle to replaceTurn2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of replaceTurn2
+
+global apIX;
+global yawIX;
+global acc2;
+global walkSeg;
+global walk;
+global steps;
+global editFlag;
+
+%editFlag = [editSTS1 firstStep missWalk editEIX addTurn multAttempt]
+editFlag(5) = 1;
+
+ap2 = acc2(:,3);
+yaw = acc2(:,4);
+
+
+[x, ~] = getpts;
+x = round(x(1) .*100 +1);
+
+yawWin = x-10:x+10;
+[~,temp] = max(abs(yaw(yawWin)));
+pk = temp + yawWin(1)-1;
+
+
+lim = max(abs(yaw(apIX(1):apIX(1)+150)));
+ind = find(abs(yaw) < lim);
+
+limCross = ind - pk;
+l = limCross(limCross<0);
+tStart = l(end) + pk;
+r = limCross(limCross>0);
+if isempty(r)
+    r = length(yaw);
+else
+    r = r(1) + pk;
+end
+tEnd = r;
+
+yawIX(3) = tStart;
+yawIX(4) = tEnd;
+yawIX(6) = pk;
+
+[ walkSeg, walk, steps ] = findTugSteps( ap2, apIX, yawIX );
+
+calcVars;
+
+
+
+
+
+
+% --- Executes on button press in startEarly.
+function startEarly_Callback(hObject, eventdata, handles)
+% hObject    handle to startEarly (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
