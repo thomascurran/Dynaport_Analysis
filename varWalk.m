@@ -31,6 +31,22 @@ for ii = 1:nSeg
         Ad(rem) = [];
         ind(rem) = [];
         d = lags(ind);
+        
+        %If there are no peaks in c, something is wrong with the signal
+        if isempty(d)
+            %Find new walking segment using vertical acc
+            [~, tempInd] = findpeaks(vert, 'MinPeakProminence', thresh, 'MinPeakHeight', 0);
+            vInd = (tempInd(1):tempInd(end)) + walkSeg(ii,1);
+            vNew = acc(vInd,1);
+            vNew = (vNew - mean(vNew)) ./ std(vNew);
+            [c, lags] = xcov(vNew, 'unbiased');
+            d0 = find(lags==0);
+            c = c(d0:end);
+            lags = lags(d0:end);
+            if max(c)>1, c = c./max(c); end
+            [Ad, ind] = findpeaks(c, 'MinPeakProminence', thresh, 'MinPeakHeight', 0.1);
+            d=lags(ind);
+        end
     end
 
     
@@ -43,7 +59,7 @@ for ii = 1:nSeg
     end
         
     
-    if (d2-d1) < d1/2 && length(d) > 2
+    if (d2-d1) < d1/2 && length(d) > 3
         Ad1 = max([Ad1, Ad2]);
         d1 = d(find(Ad==Ad1));
         d2 = d(3);
