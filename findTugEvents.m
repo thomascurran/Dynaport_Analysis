@@ -41,7 +41,9 @@ if isempty(aX)
     aThresh = ap(six2)*th;
     aX = find(diff(sign(ap(1:six2)-aThresh)));
     if isempty(aX), aX = six2;
-    else aX = aX(end); end 
+    else aX = aX(end); end
+elseif aX < 10
+    aX = six2;
 end
 [~, locS1]=findpeaks(ap(1:aX(end)));
 if isempty(locS1)
@@ -57,7 +59,7 @@ six1 = locS1(end);
 %Find Turns
 
 
-absYaw = abs(yaw(six2:ln));
+absYaw = abs(yaw(six2:ln-50));
 [mag, ind] = findpeaks(absYaw, 'MinPeakWidth', fs/4);
 M1 = max(mag);
 ix1 = find(mag==M1);
@@ -164,6 +166,8 @@ if isempty(aX)
     if isempty(aX), aX=0; end
 end
 aX = aX(1) + eix1;
+%make sure window is large enough for findpeaks
+if aX > ln - 10, aX = eix1; end
 [~, locE2]=findpeaks(ap(aX:ln));
 if isempty(locE2) 
     %Find first point that is within 10% of max height (may change 10%)
@@ -240,6 +244,7 @@ if isempty(pX)
     else pX = pX(1); end 
 end
 pX = pX(1) + p1a;
+if ee1 - pX < 10, pX = p1a; end
 [~, loc1B]=findpeaks(pitch(pX:ee1), 'MinPeakProminence', pProm);
 if isempty(loc1B),
     [~, loc1B] = findpeaks(pitch(p1a:ee1), 'MinPeakProminence', pProm);
@@ -261,6 +266,7 @@ if isempty(pX)
     if isempty(pX), pX = p2a;
     else pX = pX(end)+ss2; end 
 else pX = pX(end)+ss2; end
+if pX - ss2 < 10, pX = p2a; end
 [~, loc2B] = findpeaks(-pitch(ss2:pX), 'MinPeakProminence', pProm);
 if isempty(loc2B),
     [~, loc2B] = findpeaks(-pitch(ss2:p2a), 'MinPeakProminence', pProm);
