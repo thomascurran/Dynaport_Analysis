@@ -74,11 +74,13 @@ for iii = 1:length(peaks)
     turnE = turns(iii,2); 
     rPeak = loc - turnE;
     rPeak(rPeak<0) = [];
-    rPeak = rPeak(1) + turnE;
-    if abs(yaw(rPeak)) > tol*lim
-        rCross = ind - rPeak;
-        rCross(rCross<0)= [];
-        turns(iii,2) = rCross(1) + rPeak;
+    if ~isempty(rPeak)
+        rPeak = rPeak(1) + turnE;
+        if abs(yaw(rPeak)) > tol*lim
+            rCross = ind - rPeak;
+            rCross(rCross<0)= [];
+            turns(iii,2) = rCross(1) + rPeak;
+        end
     end
 end
 
