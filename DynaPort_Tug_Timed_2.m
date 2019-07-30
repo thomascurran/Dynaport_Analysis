@@ -662,12 +662,12 @@ else
         prev_path{1} = temptext;
     end
     
-    newdir = [prev_path{1} '/TUG_analysis'];
+    newdir = [prev_path{1} 'TUG_analysis'];
     if exist(newdir, 'dir') ~= 7
         mkdir(newdir);
     end
     
-    dir2 = [prev_path{1} '/TUG_time'];
+    dir2 = [prev_path{1} 'TUG_time'];
     if exist(dir2, 'dir') ~= 7
         mkdir(dir2);
     end
