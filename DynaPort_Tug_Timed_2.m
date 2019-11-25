@@ -1123,7 +1123,7 @@ global steps;
 
 
 hPlot = findobj('Type', 'axes', 'Tag', 'apPlot');
-[manT,~] = ginput(1);
+[manT,~] = getpts(hPlot);
 
 %Convert from time to index
 manIX = round(manT .*100 +1);
@@ -1164,7 +1164,7 @@ global walk;
 global steps;
 
 hPlot = findobj('Type', 'axes', 'Tag', 'apPlot');
-[manT,~] = ginput(1);
+[manT,~] = getpts(hPlot);
 
 %Convert from time to index
 manIX = round(manT .*100 +1);
@@ -1203,7 +1203,7 @@ global walk;
 global steps;
 
 hPlot = findobj('Type', 'axes', 'Tag', 'apPlot');
-[manT,~] = ginput(1);
+[manT,~] = getpts(hPlot);
 
 %Convert from time to index
 manIX = round(manT .*100 +1);
@@ -1243,7 +1243,7 @@ global walk;
 global steps;
 
 hPlot = findobj('Type', 'axes', 'Tag', 'pitchPlot');
-[manT,~] = ginput(1);
+[manT,~] = getpts(hPlot);
 
 %Convert from time to index
 manIX = round(manT .*100 +1);
@@ -1280,7 +1280,7 @@ global walk;
 global steps;
 
 hPlot = findobj('Type', 'axes', 'Tag', 'pitchPlot');
-[manT,~] = ginput(1);
+[manT,~] = getpts(hPlot);
 
 %Convert from time to index
 manIX = round(manT .*100 +1);
@@ -1318,8 +1318,8 @@ global walkSeg;
 global walk;
 global steps;
 
-h = findobj('Type', 'axes', 'Tag', 'apPlot');
-[manT,~] = ginput(1);
+hPlot = findobj('Type', 'axes', 'Tag', 'apPlot');
+[manT,~] = getpts(hPlot);
 
 %Convert from time to index
 manIX = round(manT .*100 +1);
@@ -1357,8 +1357,8 @@ global walkSeg;
 global walk;
 global steps;
 
-h = findobj('Type', 'axes', 'Tag', 'pitchPlot');
-[manT,~] = ginput(1);
+hPlot = findobj('Type', 'axes', 'Tag', 'pitchPlot');
+[manT,~] = getpts(hPlot);
 
 %Convert from time to index
 manIX = round(manT .*100 +1);
@@ -1395,8 +1395,8 @@ global walkSeg;
 global walk;
 global steps;
 
-h = findobj('Type', 'axes', 'Tag', 'pitchPlot');
-[manT,~] = ginput(1);
+hPlot = findobj('Type', 'axes', 'Tag', 'pitchPlot');
+[manT,~] = getpts(hPlot);
 
 %Convert from time to index
 manIX = round(manT .*100 +1);
