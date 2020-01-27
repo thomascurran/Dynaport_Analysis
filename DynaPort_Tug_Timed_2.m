@@ -296,6 +296,7 @@ set(hT2,'Value',0);
 function loadNewData(path, file)
 global time1;
 global resetUsed;
+if isempty(resetUsed), resetUsed = 0; end
 if resetUsed ~=1, time1 = datetime('now', 'Format', 'HH:mm:ss.SSS'); end
 
 loadNullData;
